@@ -1,0 +1,132 @@
+<!doctype html>
+{% load static %}
+
+<html lang="ru">
+<head>
+    <link rel="stylesheet" type="text/css" href="../../../static/css/style.css"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <link rel="stylesheet" href={% static 'css/style.css' %}>
+    <title>Zoo</title>
+</head>
+<body>
+<div class="container">
+    <div>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="http://127.0.0.1:8000/api/placefilter/" class="text-decoration-none">
+                    a. Выбрать место, где содержатся минимум два вида животных.
+                </a>
+                <span>* Вывод количества уникальных животных сделал, но поле только для чтения и фильтрации не
+                    поддается, другой вариант решения найти не успел.</span>
+            </li>
+            <li class="list-group-item">
+                <a href="http://127.0.0.1:8000/api/animals/?employee_date_before=2019-11-12"
+                   class="text-decoration-none">
+                    b. Выбрать животных, за которыми закреплен один и тот же сотрудник более 1 года.
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="http://127.0.0.1:8000/api/animals/?place__place_name=Клетка&place__square=95"
+                   class="text-decoration-none">
+                    c. Выбрать животных по характеристикам вольера
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="http://127.0.0.1:8000/api/animals/?age_min=7&age_max=10" class="text-decoration-none">
+                    Дополнительный фильтр по возрасту животного
+                </a>
+            </li>
+        </ul>
+    </div>
+    <h3 class="text-center mt-3">Животные</h3>
+    <table class="table table-striped table-bordered table-sm lst">
+        <thead class="thead-dark">
+        <tr>
+            <th>Имя</th>
+            <th>Возраст</th>
+            <th>Пол</th>
+            <th>Отряд</th>
+            <th>Семейство</th>
+            <th>Род</th>
+            <th>Вид</th>
+            <th>Место</th>
+            <th>Работник</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for animal in animals %}
+            <tr>
+                <td>{{ animal.subspecies }}</td>
+                <td>{{ animal.age }}</td>
+                <td>{% if animal.gender == 'M' %}Мужской{% else %}Женский{% endif %}</td>
+                <td>{{ animal.animal_type }}</td>
+                <td>{{ animal.family }}</td>
+                <td>{{ animal.genus }}</td>
+                <td>{{ animal.subspecies }}</td>
+                <td>{{ animal.place }}</td>
+                <td>{{ animal.employee }}</td>
+                <td>
+                    <a href="/api/animal/{{ animal.id }}/update/" class="link-info">Редактировать</a>
+                    <a href="/api/animal/{{ animal.id }}/delete/" class="link-danger">Удалить</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="/api/animal/create/" class="btn btn-primary">Добавить новую запись</a>
+    <ul class="list-group lst">
+        <li class="list-group-item">
+            <a href="http://127.0.0.1:8000/api/animals/" class="text-decoration-none">
+                Animal List
+            </a>
+        </li>
+    </ul>
+    <h3 class="text-center mt-3">Сотрудники</h3>
+    <table class="table table-striped table-bordered table-sm lst">
+        <thead class="thead-dark">
+        <tr>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Пол</th>
+            <th>Возраст</th>
+            <th>Должность</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for employee in employee %}
+            <tr>
+                <td>{{ employee.first_name }}</td>
+                <td>{{ employee.last_name }}</td>
+                <td>{% if employee.gender == 'M' %}Мужской{% else %}Женский{% endif %}</td>
+                <td>{{ employee.age }}</td>
+                <td>{{ employee.position }}</td>
+                <td>
+                    <a href="/api/employee/{{ employee.id }}/update/" class="link-info">Редактировать</a>
+                    <a href="/api/employee/{{ employee.id }}/delete/" class="link-danger">Удалить</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="/api/employee/create/" class="btn btn-primary">Добавить новую запись</a>
+    <ul class="list-group lst mb-4">
+        <li class="list-group-item">
+            <a href="http://127.0.0.1:8000/api/employees/" class="text-decoration-none">
+                Employees List
+            </a>
+        </li>
+    </ul>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+        integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+        crossorigin="anonymous"></script>
+</body>
+</html>
