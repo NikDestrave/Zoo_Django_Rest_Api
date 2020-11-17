@@ -2,33 +2,45 @@ from collections import Counter
 
 from rest_framework import serializers
 
-from zooapp.models import Animal, Place, Employee
+from zooapp.models import Animal, Place, Employee, AnimalToEmployee
 
 
 class MainSerializer(serializers.ModelSerializer):
+    """Вывод списка животных"""
     class Meta:
         model = Animal
         fields = '__all__'
 
 
+class EmployeesSerializer(serializers.ModelSerializer):
+    """Вывод списка сотрудников"""
+    gender = serializers.CharField(source='get_gender_display')
+
+    class Meta:
+        model = Employee
+        exclude = ['updated_at', 'is_active']
+
+
 class AnimalSerializer(serializers.ModelSerializer):
-    """Вывод списка животных с использованием параметров фильтрации.
-    http://127.0.0.1:8000/api/animals/?age_min=&employee_date_after=&&place__place_name=&&place= ...
-    Несколько из принимаемых параметров:
-        age_min - минимальный возраст
-        age_max - максимальный возраст
-        employee_date_after = дата закрепления животного за сотрудником (от)
-        place - место нахождения животного
-        place_square - площадь места
-        subspecies - вид животного
-    """
+    """Вывод списка животных с использованием параметров фильтрации."""
     gender = serializers.CharField(source='get_gender_display')
     subspecies = serializers.SlugRelatedField(slug_field='subspecies_name', read_only=True)
     place = serializers.SlugRelatedField(slug_field='place_name', read_only=True)
     place_square = serializers.SlugRelatedField(slug_field='place_square', read_only=True)
+    employee = EmployeesSerializer(many=True)
 
     class Meta:
         model = Animal
+        fields = '__all__'
+
+
+class AnimalEmployeeSerializer(serializers.ModelSerializer):
+    """Связь многие ко многим. Животное - сотрудник."""
+    animal = MainSerializer()
+    employee = EmployeesSerializer()
+
+    class Meta:
+        model = AnimalToEmployee
         fields = '__all__'
 
 
@@ -48,9 +60,7 @@ class AnimalDetailSerializer(serializers.ModelSerializer):
 
 
 class PlaceFilterSerializer(serializers.ModelSerializer):
-    """Вывод мест нахождения животных.
-    dcount - переменная для запуска метода get и вывода итогов в объекты
-    """
+    """Вывод мест нахождения животных."""
     dcount = serializers.SerializerMethodField('get')
 
     class Meta:
@@ -69,20 +79,14 @@ class PlaceFilterSerializer(serializers.ModelSerializer):
 
 
 class PlaceSerializer(serializers.ModelSerializer):
+    """Вывод мест нахождения животных."""
     class Meta:
         model = Place
         fields = '__all__'
 
 
-class EmployeesSerializer(serializers.ModelSerializer):
-    gender = serializers.CharField(source='get_gender_display')
-
-    class Meta:
-        model = Employee
-        fields = '__all__'
-
-
 class EmployeeSerializer(serializers.ModelSerializer):
+    """Вывод списка сотрудников"""
     class Meta:
         model = Employee
         fields = '__all__'

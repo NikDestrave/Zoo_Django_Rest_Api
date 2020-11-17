@@ -1,11 +1,12 @@
 from django.contrib import admin
 
-from zooapp.models import Animal, Employee, TypeOfAnimal, Place, Family, Genus, Subspecies
+from zooapp import models
 
-admin.site.register(Animal)
-admin.site.register(Employee)
-admin.site.register(TypeOfAnimal)
-admin.site.register(Place)
-admin.site.register(Family)
-admin.site.register(Genus)
-admin.site.register(Subspecies)
+admin.site.register(models.Animal)
+admin.site.register(models.Employee)
+admin.site.register(models.TypeOfAnimal)
+admin.site.register(models.Place)
+admin.site.register(models.Family)
+admin.site.register(models.Genus)
+admin.site.register(models.Subspecies)
+admin.site.register(models.AnimalToEmployee)

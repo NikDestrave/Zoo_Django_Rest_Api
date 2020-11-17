@@ -53,7 +53,7 @@
             <th>Род</th>
             <th>Вид</th>
             <th>Место</th>
-            <th>Работник</th>
+            <th>Сотрудники</th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -68,7 +68,16 @@
                 <td>{{ animal.genus }}</td>
                 <td>{{ animal.subspecies }}</td>
                 <td>{{ animal.place }}</td>
-                <td>{{ animal.employee }}</td>
+                <td>
+                    {% for item in animals_employee %}
+                        {% if item.animal.id == animal.id %}
+                            <a href="api/employee/{{ item.employee.id }}/update/"
+                               class="text-decoration-none">{{ item.employee.first_name }} {{ item.employee.last_name }}
+                            </a>
+                            <br>
+                        {% endif %}
+                    {% endfor %}
+                </td>
                 <td>
                     <a href="/api/animal/{{ animal.id }}/update/" class="link-info">Редактировать</a>
                     <a href="/api/animal/{{ animal.id }}/delete/" class="link-danger">Удалить</a>
@@ -80,7 +89,7 @@
     <a href="/api/animal/create/" class="btn btn-primary">Добавить новую запись</a>
     <ul class="list-group lst">
         <li class="list-group-item">
-            <a href="http://127.0.0.1:8000/api/animals/" class="text-decoration-none">
+            <a href="/api/animals/" class="text-decoration-none">
                 Animal List
             </a>
         </li>
@@ -94,6 +103,7 @@
             <th>Пол</th>
             <th>Возраст</th>
             <th>Должность</th>
+            <th>Животные</th>
             <th>Действия</th>
         </tr>
         </thead>
@@ -106,6 +116,14 @@
                 <td>{{ employee.age }}</td>
                 <td>{{ employee.position }}</td>
                 <td>
+                    {% for item in animals_employee %}
+                        {% if item.employee.id == employee.id %}
+                            <a href="api/animal/{{ item.animal.id }}/update/"
+                               class="text-decoration-none">{{ item.animal.subspecies }}</a><br>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
                     <a href="/api/employee/{{ employee.id }}/update/" class="link-info">Редактировать</a>
                     <a href="/api/employee/{{ employee.id }}/delete/" class="link-danger">Удалить</a>
                 </td>
@@ -114,10 +132,17 @@
         </tbody>
     </table>
     <a href="/api/employee/create/" class="btn btn-primary">Добавить новую запись</a>
+    <ul class="list-group lst">
+        <li class="list-group-item">
+            <a href="/api/employees/" class="text-decoration-none">
+                Employees List
+            </a>
+        </li>
+    </ul>
     <ul class="list-group lst mb-4">
         <li class="list-group-item">
-            <a href="http://127.0.0.1:8000/api/employees/" class="text-decoration-none">
-                Employees List
+            <a href="/api/animaltoemployee/" class="text-decoration-none">
+                Animal To Employee List
             </a>
         </li>
     </ul>

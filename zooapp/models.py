@@ -118,7 +118,7 @@ class Animal(models.Model):
     created_at = models.DateTimeField(verbose_name='Создан', auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name='Обновлен', auto_now=True)
     place = models.ForeignKey(Place, verbose_name='Место нахождения', on_delete=models.CASCADE)
-    employee = models.ForeignKey(Employee, verbose_name='Работник', blank=True, null=True, on_delete=models.CASCADE)
+    employee = models.ManyToManyField(Employee, verbose_name='Работники', through='AnimalToEmployee')
     employee_date = models.DateField(verbose_name='Дата закрепления', blank=True, null=True)
     is_active = models.BooleanField(verbose_name='Активен', default=True)
 
@@ -137,3 +137,16 @@ class Animal(models.Model):
 
     def __str__(self):
         return f'{self.subspecies} ({self.family})'
+
+
+class AnimalToEmployee(models.Model):
+    animal = models.ForeignKey(Animal, verbose_name='Животное', on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee, verbose_name='Сотрудник', on_delete=models.CASCADE)
+    created = models.DateField(verbose_name='Создан')
+
+    class Meta:
+        verbose_name = 'связь жив. с сотр.'
+        verbose_name_plural = 'связи жив. с сотр.'
+
+    def __str__(self):
+        return f'{self.animal} - {self.employee}'

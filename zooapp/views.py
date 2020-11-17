@@ -1,11 +1,11 @@
-from django.db.models import Value, PositiveIntegerField
+from django.db.models import Value, PositiveIntegerField, Count
 from django.shortcuts import render
 from rest_framework import generics
 
-from zooapp.models import Animal, Place, Employee, Family, Genus
+from zooapp.models import Animal, Place, Employee, Family, Genus, AnimalToEmployee
 from zooapp.serializers import AnimalSerializer, PlaceSerializer, EmployeeSerializer, PlaceFilterSerializer, \
-    MainSerializer, EmployeesSerializer
-from zooapp.service import AnimalFilter, PlaceFilter
+    MainSerializer, EmployeesSerializer, AnimalEmployeeSerializer
+from zooapp.service import AnimalFilter, PlaceFilter, AnimalToEmployeeFilter
 
 
 def main(request):
@@ -14,12 +14,14 @@ def main(request):
     employee = Employee.objects.all()
     family = Family.objects.all()
     genus = Genus.objects.all()
+    animals_employee = AnimalToEmployee.objects.all()
 
     content = {
         'employee': employee,
         'family': family,
         'genus': genus,
-        'animals': animals
+        'animals': animals,
+        'animals_employee': animals_employee
     }
 
     return render(request, 'zooapp/base.html', content)
@@ -115,3 +117,10 @@ class PlaceDelete(generics.DestroyAPIView):
     """Удаление места"""
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
+
+
+class AnimalsToEmployees(generics.ListAPIView):
+    """Вывод связей для моделей Animal и Employee"""
+    queryset = AnimalToEmployee.objects.all()
+    serializer_class = AnimalEmployeeSerializer
+    filterset_class = AnimalToEmployeeFilter

@@ -20,4 +20,6 @@ urlpatterns = [
     path('place/<int:pk>/update/', views.EmployeeUpdate.as_view()),
     path('place/<int:pk>/delete/', views.EmployeeDelete.as_view()),
     path('placefilter/', views.PlaceFilterList.as_view()),
+
+    path('animaltoemployee/', views.AnimalsToEmployees.as_view()),
 ]
